@@ -22,15 +22,32 @@ class BankAccountTest {
     }
 
     @Test
+    void complexWithdrawTest() {
+        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        bankAccount.withdraw(-100);
+
+        assertEquals(200, bankAccount.getBalance());
+
+        bankAccount.withdraw(500);
+
+        assertEquals(200, bankAccount.getBalance());
+    }
+
+    @Test
     void isEmailValidTest(){
         assertTrue(BankAccount.isEmailValid( "a@b.com"));
         assertFalse( BankAccount.isEmailValid(""));
     }
 
     @Test
+    void emailValidComplexTest(){
+        assertFalse( BankAccount.isEmailValid("@b.com"));
+        assertFalse( BankAccount.isEmailValid("a@"));
+    }
+
+    @Test
     void constructorTest() {
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
-
         assertEquals("a@b.com", bankAccount.getEmail());
         assertEquals(200, bankAccount.getBalance());
         //check for exception thrown correctly
