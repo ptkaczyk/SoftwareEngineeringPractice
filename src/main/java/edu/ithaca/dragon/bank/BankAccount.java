@@ -36,7 +36,15 @@ public class BankAccount {
 
 
     public static boolean isEmailValid(String email){
-        if (email.indexOf('@') == -1){
+        int atSignIndex = email.indexOf(@);
+        if (atSignIndex == -1) {
+            return false;
+        }
+        if (atSignIndex == 0){
+            return false;
+        }
+        int dotComIndex=email.indexOf(.,atSignIndex);
+        if not (charAt(dotComIndex).equals(".") or charAt(dotComIndex+1).equals("c") or charAt(dotComIndex+2).equals("o") or charAt(dotComIndex+3).equals("m") ){
             return false;
         }
         else {
