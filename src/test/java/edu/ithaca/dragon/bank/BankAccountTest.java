@@ -51,8 +51,18 @@ class BankAccountTest {
      */
     @Test
     void isEmailValidTest(){
+        //True Tests
         assertTrue(BankAccount.isEmailValid( "a@b.com"));
+        assertTrue(BankAccount.isEmailValid( "a-a@b.com"));
+        assertTrue(BankAccount.isEmailValid( "a_a@b.com"));
+        //assertTrue(BankAccount.isEmailValid( "a@b.cc"));
+        //assertTrue(BankAccount.isEmailValid( "a@b.org"));
+        //False Tests
         assertFalse( BankAccount.isEmailValid(""));
+        assertFalse(BankAccount.isEmailValid( "a-@b.com"));
+        assertFalse( BankAccount.isEmailValid("a..a@b.com"));
+        //assertFalse(BankAccount.isEmailValid( "a@b..com"));
+        //assertFalse(BankAccount.isEmailValid( "a@b.c"));
     }
     /*
     has an equivalence class with constructor
