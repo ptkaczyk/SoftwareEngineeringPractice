@@ -28,13 +28,19 @@ public class BankAccount {
 
     /**
      * @post reduces the balance by amount if amount is non-negative and smaller than balance; other values will have no change
+     * Has a border case of all positive doubles
      */
-    public void withdraw (double amount)  {
+    public void withdraw (double amount) {
         balance -= amount;
 
     }
 
-
+    /**
+     * Border case of any string with prefixes of letters (a-z), numbers, underscores, periods, and dashes.
+     * An underscore, period, or dash must be followed by one or more letter or number.
+     * Email domain formats have letters, numbers, dashes.
+     * The last portion of the domain must be at least two characters, for example: .com, .org, .cc
+     */
     public static boolean isEmailValid(String email){
         int atSignIndex = email.indexOf(@);
         if (atSignIndex == -1) {
