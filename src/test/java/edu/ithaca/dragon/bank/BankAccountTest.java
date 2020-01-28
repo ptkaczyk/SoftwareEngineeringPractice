@@ -53,14 +53,22 @@ class BankAccountTest {
     void isEmailValidTest(){
         //True Tests
         assertTrue(BankAccount.isEmailValid( "a@b.com"));
+        //tests standard email with just one character as the username and one character as the website, not a border case
         assertTrue(BankAccount.isEmailValid( "a-a@b.com"));
+        //tests one hyphen in the email, not a border case
         assertTrue(BankAccount.isEmailValid( "a_a@b.com"));
-        //assertTrue(BankAccount.isEmailValid( "a@b.cc"));
-        //assertTrue(BankAccount.isEmailValid( "a@b.org"));
+        //tests one underscore in the email, not a border case
+        assertTrue(BankAccount.isEmailValid( "a@b.cc"));
+        //tests .cc instead of .com, not a border case
+        assertTrue(BankAccount.isEmailValid( "a@b.org"));
+        // tests .org instead of .com, not a border case
         //False Tests
         assertFalse( BankAccount.isEmailValid(""));
+        //tests no input as a false case, not a border case
         assertFalse(BankAccount.isEmailValid( "a-@b.com"));
+        // tests hyphen before @ symbol which is a false case, not a border case
         assertFalse( BankAccount.isEmailValid("a..a@b.com"));
+        // tests two dots next to each other which is a false case, not a border case
         //assertFalse(BankAccount.isEmailValid( "a@b..com"));
         //assertFalse(BankAccount.isEmailValid( "a@b.c"));
     }
