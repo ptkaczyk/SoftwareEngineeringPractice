@@ -27,7 +27,7 @@ public class BankAccount {
     }
 
     /**
-     * @post reduces the balance by amount if amount is non-negative and smaller than balance
+     * @post reduces the balance by amount if amount is non-negative and smaller than balance; other values will have no change
      */
     public void withdraw (double amount)  {
         balance -= amount;
@@ -36,7 +36,15 @@ public class BankAccount {
 
 
     public static boolean isEmailValid(String email){
-        if (email.indexOf('@') == -1){
+        int atSignIndex = email.indexOf("@");
+        if (atSignIndex == -1) {
+            return false;
+        }
+        if (atSignIndex == 0){
+            return false;
+        }
+        int dotComIndex=email.indexOf(email.indexOf("."));
+        if( not (email.charAt(dotComIndex)==(".") or email.charAt(dotComIndex+1)==("c") or email.charAt(dotComIndex+2)==("o") or email.charAt(dotComIndex+3)==("m")) ){
             return false;
         }
         else {
