@@ -3,64 +3,113 @@ package edu.ithaca.dragon.bank;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class BankAccountTest {
-<<<<<<< HEAD
 
-=======
     /*
     Has an equivalence class with other functions: withdrawtest, complexwithdraw test
  */
->>>>>>> master
+
     @Test
     void getBalanceTest() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        BankAccount bankAccount = new BankAccount("a@b.com", 1);
 
-        assertEquals(200, bankAccount.getBalance());
+        assertEquals(1, bankAccount.getBalance());
+
+        BankAccount bankAccount2 = new BankAccount("a@b.com", 0);
+
+        assertEquals(0, bankAccount2.getBalance());
     }
-<<<<<<< HEAD
 
-=======
     /*
     Has an equivalence class with other functions: withdrawtest, complexwithdraw test
     Has a border case of all positive doubles
     */
->>>>>>> master
-    @Test
-    void withdrawTest() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
-        bankAccount.withdraw(100);
 
-        assertEquals(100, bankAccount.getBalance());
+    @Test
+    void withdrawTest() throws InsufficientFundsException {
+        BankAccount bankAccount = new BankAccount("a@b.com", 2);
+        bankAccount.withdraw(1);
+
+        assertEquals(1, bankAccount.getBalance());
+
+        bankAccount.withdraw(0);
+        assertEquals(1, bankAccount.getBalance());
     }
 
-<<<<<<< HEAD
-=======
+
     /*
     Has an equivalence class with other functions: withdrawtest, getbalance test
 
      */
->>>>>>> master
+
     @Test
-    void complexWithdrawTest() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
-        bankAccount.withdraw(-100);
+    void complexWithdrawTest() throws InsufficientFundsException {
+        BankAccount bankAccount = new BankAccount("a@b.com", 1);
 
-        assertEquals(200, bankAccount.getBalance());
+        //EC: Negative numbers
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.withdraw(-1));
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.withdraw(0.001));
+        assertEquals(1, bankAccount.getBalance());
 
-        bankAccount.withdraw(500);
+        //EC: Amounts larger than the balance
+        assertThrows(InsufficientFundsException.class, ()-> bankAccount.withdraw(2));
+        assertEquals(1, bankAccount.getBalance());
 
-        assertEquals(200, bankAccount.getBalance());
+        //EC: Legal amounts
+        bankAccount.withdraw(1);
+        assertEquals(0, bankAccount.getBalance());
     }
 
-<<<<<<< HEAD
     @Test
-    void isEmailValidTest(){
-        assertTrue(BankAccount.isEmailValid( "a@b.com"));
-        assertFalse( BankAccount.isEmailValid(""));
+    void depositTest() throws InsufficientFundsException {
+        BankAccount bankAccount = new BankAccount("a@b.com", 1);
+        bankAccount.deposit(1);
+
+        assertEquals(2, bankAccount.getBalance());
+
+        bankAccount.withdraw(0);
+        assertEquals(2, bankAccount.getBalance());
+
+        //EC: Negative numbers
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.deposit(-1));
+        assertThrows(IllegalArgumentException.class, ()-> bankAccount.deposit(0.001));
+        assertEquals(2, bankAccount.getBalance());
+
+        //EC: Legal amounts
+        bankAccount.deposit(2);
+        assertEquals(4, bankAccount.getBalance());
     }
 
-=======
+    @Test
+    void transferTest() throws InsufficientFundsException {
+        //EC: Legal interaction
+        BankAccount source = new BankAccount ("a@b.com", 2);
+        BankAccount destination = new BankAccount("a@b.com", 0);
+        BankAccount.transfer(source, destination, 1);
+        assertEquals(1, source.getBalance());
+        assertEquals(1, destination.getBalance());
+
+        //EC: Negative values
+        assertThrows(IllegalArgumentException.class, ()-> BankAccount.transfer(source, destination, -1));
+        //EC: More than 2 decimal places
+        assertThrows(IllegalArgumentException.class, ()-> BankAccount.transfer(source, destination, 0.001));
+        //EC: Too-large amount
+        assertThrows(InsufficientFundsException.class, ()-> BankAccount.transfer(source, destination, 10));
+    }
+
+    @Test
+    void isAmountValidTest(){
+        //EC: Negative amounts
+        assertEquals(false, BankAccount.isAmountValid(-1));
+        assertEquals(true, BankAccount.isAmountValid(1));
+        //EC: Too many decimals
+        assertEquals(false, BankAccount.isAmountValid(0.001));
+        assertEquals(true, BankAccount.isAmountValid(0.01));
+    }
+
+
     /*
     has an equivalence class with constructor
     Border case of any string with prefixes of letters (a-z), numbers, underscores, periods, and dashes.
@@ -98,27 +147,26 @@ class BankAccountTest {
      * Email domain formats have letters, numbers, dashes.
      * The last portion of the domain must be at least two characters, for example: .com, .org, .cc
      */
->>>>>>> master
+
     @Test
     void emailValidComplexTest(){
         assertFalse( BankAccount.isEmailValid("@b.com"));
         assertFalse( BankAccount.isEmailValid("a@"));
     }
-<<<<<<< HEAD
 
-=======
     /*
     Has an equivalence class with other all other functions
 
  */
->>>>>>> master
     @Test
     void constructorTest() {
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        BankAccount bankAccount = new BankAccount("a@b.com", 1);
         assertEquals("a@b.com", bankAccount.getEmail());
-        assertEquals(200, bankAccount.getBalance());
+        assertEquals(1, bankAccount.getBalance());
         //check for exception thrown correctly
-        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 1));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("a@b.com", -1));
+        assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 0.001));
     }
 
 }

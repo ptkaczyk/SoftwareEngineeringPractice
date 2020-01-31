@@ -1,59 +1,3 @@
-<<<<<<< HEAD
-package edu.ithaca.dragon.bank;
-
-public class BankAccount {
-
-    private String email;
-    private double balance;
-
-    /**
-     * @throws IllegalArgumentException if email is invalid
-     */
-    public BankAccount(String email, double startingBalance){
-        if (isEmailValid(email)){
-            this.email = email;
-            this.balance = startingBalance;
-        }
-        else {
-            throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
-        }
-    }
-
-    public double getBalance(){
-        return balance;
-    }
-
-    public String getEmail(){
-        return email;
-    }
-
-    /**
-     * @post reduces the balance by amount if amount is non-negative and smaller than balance; other values will have no change
-     */
-    public void withdraw (double amount)  {
-        balance -= amount;
-
-    }
-
-
-    public static boolean isEmailValid(String email){
-        int atSignIndex = email.indexOf("@");
-        if (atSignIndex == -1) {
-            return false;
-        }
-        if (atSignIndex == 0){
-            return false;
-        }
-        int dotComIndex=email.indexOf(email.indexOf("."));
-        if( not (email.charAt(dotComIndex)==(".") or email.charAt(dotComIndex+1)==("c") or email.charAt(dotComIndex+2)==("o") or email.charAt(dotComIndex+3)==("m")) ){
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-}
-=======
 package edu.ithaca.dragon.bank;
 
 public class BankAccount {
@@ -67,9 +11,13 @@ public class BankAccount {
     public BankAccount(String email, double startingBalance) {
         if (isEmailValid(email)) {
             this.email = email;
-            this.balance = startingBalance;
         } else {
             throw new IllegalArgumentException("Email address: " + email + " is invalid, cannot create account");
+        }
+        if (isAmountValid(startingBalance)) {
+            this.balance = startingBalance;
+        } else {
+            throw new IllegalArgumentException("Amount: " + startingBalance + " is invalid, cannot create account");
         }
     }
 
@@ -82,12 +30,56 @@ public class BankAccount {
     }
 
     /**
-     * @post reduces the balance by amount if amount is non-negative and smaller than balance; other values will have no change
+     * @post reduces the balance by amount if amount is non-negative, has 2 or fewer decimal places and is smaller than balance; too-large values throw an insufficient funds exception, and other incorrect values will throw an illegal argument exception.
      * Has a border case of all positive doubles
      */
-    public void withdraw(double amount) {
-        balance -= amount;
+    public void withdraw(double amount) throws InsufficientFundsException {
+        if (isAmountValid(amount) == false) {
+            throw new IllegalArgumentException("Amount: " + amount + " is invalid.");
+        } else {
+            if (amount > this.balance) {
+                throw new InsufficientFundsException("Amount: " + amount + " is invalid.");
+            } else {
+                balance -= amount;
+            }
+        }
 
+    }
+    /**
+     * @post increases the balance by amount if amount is non-negative and has two or fewer decimal places; incorrect values will throw an illegal argument exception.
+     * Has a border case of all positive doubles
+     */
+    public void deposit(double amount) throws InsufficientFundsException {
+        if (isAmountValid(amount) == false) {
+            throw new IllegalArgumentException("Amount: " + amount + " is invalid.");
+        } else {
+            balance += amount;
+        }
+    }
+    //Reduces the balance of the source by the amount, then adds that amount to the destination, assuming the amount is valid.
+    //If the amount is larger than the source's balance, it throws an insufficient funds exception, and if it is otherwise invalid, it throws an illegal argument exception.
+    static void transfer(BankAccount source, BankAccount destination, double amount) throws InsufficientFundsException {
+        if (isAmountValid(amount) == false) {
+            throw new IllegalArgumentException("Amount: " + amount + " is invalid.");
+        } else {
+            if (amount > source.balance) {
+                throw new InsufficientFundsException("Amount: " + amount + " is invalid.");
+            } else {
+                source.withdraw(amount);
+                destination.deposit(amount);
+            }
+        }
+    }
+
+    public static boolean isAmountValid(double amount){
+        if (amount  < 0) {
+            return false;
+        }
+        String amountChecker = Double.toString(amount);
+        if (amountChecker.length() - amountChecker.indexOf('.') - 1 > 2){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -97,18 +89,26 @@ public class BankAccount {
      * The last portion of the domain must be at least two characters, for example: .com, .org, .cc
      */
     public static boolean isEmailValid(String email) {
+        //Fails if more than 1 @ sign is present.
+        if (email.lastIndexOf("@") != email.indexOf("@")) {
+            return false;
+        }
         int atSignIndex = email.indexOf("@");
+        //Fails if @ sign is not present.
         if (atSignIndex == -1) {
             return false;
         }
+        //Fails if @ sign is the first symbol.
         if (atSignIndex == 0) {
             return false;
         }
-        //before @ check
+        //before @ checks
         int beforeAt=atSignIndex-1;
+        //Fails if a period is followed by another period.
         if (email.charAt(email.indexOf('.') + 1) == '.'){
             return false;
         }
+        //Fails if a dash is adjacent to the @.9
         if( email.indexOf('@') - 1 == email.indexOf('-')){
             return false;
         }
@@ -141,5 +141,3 @@ public class BankAccount {
         return false;
     }
 }
-
->>>>>>> master
